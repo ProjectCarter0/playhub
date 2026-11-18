@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#09090f">
+<title>PLAYHUB — Mini Games</title>
+<style>
+:root{--bg:#09090f;--panel:#141420;--panel2:#1b1b2b;--line:#303047;--red:#ff405d;--pink:#ff6687;--text:#f6f4fb;--muted:#aaa8bd;--green:#6ce5b1}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 50% -20%,#35203d 0,transparent 45%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer;touch-action:manipulation}
+.wrap{width:min(1100px,calc(100% - 28px));margin:auto}
+header{padding:25px 0 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{font-size:clamp(25px,5vw,36px);font-weight:950;letter-spacing:-1.5px}
+.brand span{color:var(--red)}
+.pill{border:1px solid #59404d;color:#ffc2cf;background:#28151e;padding:7px 11px;border-radius:99px;font-size:12px;font-weight:700}
+.hero{padding:25px 0 23px}
+.eyebrow{color:var(--pink);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+h1{font-size:clamp(34px,7vw,58px);line-height:1.02;letter-spacing:-2px;margin:10px 0}
+.hero p{color:var(--muted);max-width:580px;line-height:1.6;margin:10px 0 0}
+.games{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:22px 0}
+.card{background:linear-gradient(145deg,#1a1a29,#11111a);border:1px solid var(--line);border-radius:20px;padding:17px;text-align:left;color:var(--text);min-height:170px;transition:.15s}
+.card:active{transform:scale(.98)}
+.card.selected{border-color:var(--red);box-shadow:0 0 0 1px #ff405d44,0 12px 35px #ff405d12}
+.emoji{font-size:31px}
+.card h3{margin:10px 0 4px;font-size:18px}
+.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+.tag{display:inline-block;margin-top:13px;color:#ffc2cf;background:#321823;padding:5px 9px;border-radius:99px;font-size:11px;font-weight:750}
+.game-panel{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:clamp(16px,3vw,25px);margin:16px 0 28px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.panel-head h2{margin:0;font-size:23px}
+.sub{color:var(--muted);font-size:13px;margin-top:5px}
+.action{background:var(--red);color:white;border:0;border-radius:12px;padding:11px 16px;font-weight:800}
+.action.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.stat{background:#0d0d16;border:1px solid var(--line);padding:9px 13px;border-radius:12px;font-size:13px;color:var(--muted)}
+.stat b{color:var(--text);margin-left:5px}
+#snakeBoard{width:min(100%,420px);aspect-ratio:1;display:grid;grid-template-columns:repeat(16,1fr);gap:2px;background:#080810;border:1px solid #39394d;border-radius:12px;padding:7px;margin:12px auto}
+.cell{background:#171725;border-radius:3px}
+.cell.snake{background:#69e4ad}
+.cell.food{background:var(--red);border-radius:50%}
+.controls{display:grid;grid-template-columns:repeat(3,54px);gap:7px;justify-content:center;margin:15px auto 4px}
+.controls button{height:48px;border:1px solid var(--line);background:#222235;color:white;border-radius:12px;font-size:20px}
+.controls .empty{visibility:hidden}
+.center{text-align:center}
+#reactionBox{height:190px;border:1px solid var(--line);border-radius:16px;background:#24243a;display:grid;place-items:center;text-align:center;padding:15px;margin-top:16px;user-select:none;touch-action:manipulation}
+#reactionBox.wait{background:#4b2730}
+#reactionBox.go{background:#17664d}
+#reactionBox p{font-size:20px;font-weight:850;margin:0}
+#clickTarget{font-size:clamp(18px,4vw,25px);font-weight:900}
+#clickTarget .big{display:block;font-size:48px;margin-bottom:5px}
+.note{font-size:12px;color:var(--muted);line-height:1.55;margin-top:16px}
+footer{padding:4px 0 30px;color:#77758a;font-size:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+[hidden]{display:none!important}
+@media(max-width:720px){.games{grid-template-columns:1fr}.card{min-height:0;display:grid;grid-template-columns:48px 1fr;column-gap:12px;align-items:center}.card .emoji{grid-row:span 3}.card h3{margin:0}.tag{width:max-content;margin-top:7px}header{padding-top:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="brand">PLAY<span>HUB</span></div><div class="pill">✦ MINI GAME ARCADE</div></header>
+<section class="hero">
+<div class="eyebrow">Pick a game. Take a break.</div>
+<h1>Small games.<br><span style="color:var(--red)">Big</span> high scores.</h1>
+<p>Free mini-games that run right in your browser. No downloads and no account needed. Made to work on phones, tablets and computers.</p>
+</section>
+<main>
+<div class="games" aria-label="Choose a game">
+<button class="card selected" data-game="snake"><div class="emoji">🐍</div><h3>Snake</h3><p>Eat the dots. Don't hit the walls or yourself.</p><span class="tag">ARCADE CLASSIC</span></button>
+<button class="card" data-game="reaction"><div class="emoji">⚡</div><h3>Reaction Rush</h3><p>Wait for green, then tap as fast as you can.</p><span class="tag">SPEED TEST</span></button>
+<button class="card" data-game="clicker"><div class="emoji">⭐</div><h3>Star Clicker</h3><p>Tap the star and see how many you can collect.</p><span class="tag">QUICK FUN</span></button>
+</div>
+
+<section class="game-panel" id="snakeGame">
+<div class="panel-head"><div><h2>🐍 Snake</h2><div class="sub">Use the arrow keys, swipe the board, or tap the controls.</div></div><button class="action" id="snakeStart">Start game</button></div>
+<div class="stats"><div class="stat">Score <b id="snakeScore">0</b></div><div class="stat">Best <b id="snakeBest">0</b></div><div class="stat" id="snakeStatus">Ready</div></div>
+<div id="snakeBoard" role="img" aria-label="Snake game board"></div>
+<div class="controls" aria-label="Snake touch controls">
+<span class="empty"></span><button data-dir="up" aria-label="Up">↑</button><span class="empty"></span>
+<button data-dir="left" aria-label="Left">←</button><button data-dir="down" aria-label="Down">↓</button><button data-dir="right" aria-label="Right">→</button>
+</div>
+</section>
+
+<section class="game-panel" id="reactionGame" hidden>
+<div class="panel-head"><div><h2>⚡ Reaction Rush</h2><div class="sub">Tap the panel when it turns green. Don't jump the start!</div></div><button class="action" id="reactionStart">Start test</button></div>
+<div class="stats"><div class="stat">Last time <b id="reactionLast">—</b></div><div class="stat">Best <b id="reactionBest">—</b></div></div>
+<div id="reactionBox"><p id="reactionMessage">Press “Start test” when you're ready.</p></div>
+</section>
+
+<section class="game-panel" id="clickerGame" hidden>
+<div class="panel-head"><div><h2>⭐ Star Clicker</h2><div class="sub">Tap the star as many times as you can in 15 seconds.</div></div><button class="action" id="clickStart">Start round</button></div>
+<div class="stats"><div class="stat">Time <b id="clickTime">15</b></div><div class="stat">Stars <b id="clickScore">0</b></div><div class="stat">Best <b id="clickBest">0</b></div></div>
+<div class="center"><button id="clickTarget" class="action secondary" style="width:min(100%,420px);height:190px;margin-top:12px" disabled><span class="big">⭐</span>Press start!</button></div>
+</section>
+<p class="note">This is a starter project. Scores are saved only in this browser on this device. Be respectful online: don't post private information. PLAYHUB does not bypass school, workplace or network restrictions.</p>
+</main>
+<footer><span>© 2026 PLAYHUB · A mini project</span><span>Made for fun ✦</span></footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cards=[...document.querySelectorAll(".card")];
+cards.forEach(card=>card.addEventListener("click",()=>showGame(card.dataset.game)));
+function showGame(name){
+ cards.forEach(c=>c.classList.toggle("selected",c.dataset.game===name));
+ ["snake","reaction","clicker"].forEach(n=>$(n+"Game").hidden=n!==name);
+ if(name!=="snake") stopSnake();
+}
+const getBest=(key)=>Number(localStorage.getItem(key)||0);
+const setBest=(key,value)=>localStorage.setItem(key,String(value));
+
+// SNAKE
+const board=$("snakeBoard"), N=16; let snake=[],dir={x:1,y:0},nextDir={x:1,y:0},food={x:8,y:8},snakeTimer=null,score=0,running=false;
+function drawSnake(){
+ board.innerHTML="";
+ const cells=Array.from({length:N*N},()=>{const d=document.createElement("div");d.className="cell";board.appendChild(d);return d});
+ snake.forEach(p=>{if(cells[p.y*N+p.x])cells[p.y*N+p.x].classList.add("snake")});
+ if(cells[food.y*N+food.x])cells[food.y*N+food.x].classList.add("food");
+ $("snakeScore").textContent=score;$("snakeBest").textContent=getBest("playhub-snake-best");
+}
+function newFood(){let p;do{p={x:Math.floor(Math.random()*N),y:Math.floor(Math.random()*N)}}while(snake.some(s=>s.x===p.x&&s.y===p.y));food=p}
+function stopSnake(){if(snakeTimer)clearInterval(snakeTimer);snakeTimer=null;running=false}
+function startSnake(){
+ stopSnake();snake=[{x:5,y:8},{x:4,y:8},{x:3,y:8}];dir={x:1,y:0};nextDir={x:1,y:0};score=0;newFood();running=true;$("snakeStatus").textContent="Playing";drawSnake();snakeTimer=setInterval(tickSnake,145);
+}
+function tickSnake(){
+ dir=nextDir;const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+ if(head.x<0||head.x>=N||head.y<0||head.y>=N||snake.some((p,i)=>i<snake.length-1&&p.x===head.x&&p.y===head.y)){stopSnake();$("snakeStatus").textContent="Game over";return}
+ snake.unshift(head);
+ if(head.x===food.x&&head.y===food.y){score++;if(score>getBest("playhub-snake-best"))setBest("playhub-snake-best",score);newFood()}else snake.pop();
+ drawSnake();
+}
+function changeDir(d){const dirs={up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}};const v=dirs[d];if(v&&!(v.x===-dir.x&&v.y===-dir.y))nextDir=v}
+$("snakeStart").addEventListener("click",startSnake);
+document.querySelectorAll("[data-dir]").forEach(b=>b.addEventListener("click",()=>changeDir(b.dataset.dir)));
+document.addEventListener("keydown",e=>{const map={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right"};if(map[e.key]&&!$("snakeGame").hidden){e.preventDefault();changeDir(map[e.key])}});
+let touchX=0,touchY=0;board.addEventListener("touchstart",e=>{touchX=e.changedTouches[0].clientX;touchY=e.changedTouches[0].clientY},{passive:true});
+board.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-touchX,dy=e.changedTouches[0].clientY-touchY;if(Math.max(Math.abs(dx),Math.abs(dy))>20)changeDir(Math.abs(dx)>Math.abs(dy)?(dx>0?"right":"left"):(dy>0?"down":"up"))},{passive:true});
+drawSnake();
+
+// REACTION
+let reactionTimer=null,reactionStartTime=0,reactionState="idle",reactionBest=getBest("playhub-reaction-best");
+$("reactionBest").textContent=reactionBest?reactionBest+" ms":"—";
+$("reactionStart").addEventListener("click",()=>{
+ clearTimeout(reactionTimer);reactionState="wait";$("reactionBox").className="wait";$("reactionMessage").textContent="Wait for green…";
+ reactionTimer=setTimeout(()=>{reactionState="go";reactionStartTime=performance.now();$("reactionBox").className="go";$("reactionMessage").textContent="TAP NOW!"},1200+Math.random()*2800);
+});
+$("reactionBox").addEventListener("click",()=>{
+ if(reactionState==="wait"){clearTimeout(reactionTimer);reactionState="idle";$("reactionBox").className="";$("reactionMessage").textContent="Too soon! Try again."}
+ else if(reactionState==="go"){const ms=Math.round(performance.now()-reactionStartTime);reactionState="idle";$("reactionBox").className="";$("reactionLast").textContent=ms+" ms";if(!reactionBest||ms<reactionBest){reactionBest=ms;setBest("playhub-reaction-best",ms);$("reactionBest").textContent=ms+" ms"}$("reactionMessage").textContent="Nice! "+ms+" ms. Press Start test to go again."}
+});
+
+// CLICKER
+let clickScore=0,clickTime=15,clickInterval=null,clickRunning=false;
+$("clickBest").textContent=getBest("playhub-click-best");
+function endClicker(){clearInterval(clickInterval);clickRunning=false;$("clickTarget").disabled=true;$("clickTarget").innerHTML='<span class="big">⭐</span>Round over!';if(clickScore>getBest("playhub-click-best"))setBest("playhub-click-best",clickScore);$("clickBest").textContent=getBest("playhub-click-best")}
+$("clickStart").addEventListener("click",()=>{clearInterval(clickInterval);clickScore=0;clickTime=15;clickRunning=true;$("clickScore").textContent=0;$("clickTime").textContent=15;$("clickTarget").disabled=false;$("clickTarget").innerHTML='<span class="big">⭐</span>TAP ME!';clickInterval=setInterval(()=>{clickTime--;$("clickTime").textContent=clickTime;if(clickTime<=0)endClicker()},1000)});
+$("clickTarget").addEventListener("click",()=>{if(!clickRunning)return;clickScore++;$("clickScore").textContent=clickScore});
+</script>
+</body>
+</html>
